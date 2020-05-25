@@ -1,12 +1,14 @@
 class ModelGame
 {
 	private:
-		int width;
-		int height;
-		vector<vector<int>> Board;
-		int check(int x, int y);
+		const int width;
+		const int height;
+		vector<vector<bool>> Board;
+		bool check(int x, int y);
 
 	public:
 		ModelGame(const int width = 400, const int height = 400);
-		vector<vector<int>> update();
+		ModelGame();
+		void update();
+		vector<vector<int>> blackCells();
 }
