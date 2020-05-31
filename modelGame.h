@@ -1,3 +1,7 @@
+#include <vector>
+
+using std::vector;
+
 class ModelGame
 {
 	private:
@@ -11,4 +15,4 @@ class ModelGame
 		ModelGame();
 		void update();
 		vector<vector<int>> blackCells();
-}
+};
