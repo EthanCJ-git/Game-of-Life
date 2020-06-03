@@ -1,23 +1,26 @@
 #include "modelGame.h"
 #include <vector>
+#include <iostream>
 
 using std::vector;
 
 //constructor with dimensions specified
-ModelGame::ModelGame(const int width, const int height):
-width(width),
-height(height)
+ModelGame::ModelGame(const int w, const int h):
+width(w),
+height(h),
+Board(height)
 {
-	vector<vector<bool>> Board (height);
-	vector<bool> *temp;
+	//vector<vector<bool>> Board (height);
+	
 
 	for(int i = 0; i < height; i++)
 	{
-		temp = new vector<bool>(width);
-		temp->assign(width, 0);
-		Board[i] = *temp;
-		delete temp;
+		vector<bool> temp (width);
+		temp.assign(width, 0);
+		Board.at(i) = temp;
+		
 	}//populate the Board vector
+	std::cout << Board.size();
 }//end constructor
 
 //constructor with default dimensions
@@ -26,14 +29,13 @@ width(400),
 height(400)
 {
 	vector<vector<bool>> Board (height);
-	vector<bool> *temp;
 
 	for(int i = 0; i < height; i++)
 	{
-		temp = new vector<bool>(width);
-		temp->assign(width, 0);
-		Board[i] = *temp;
-		delete temp;
+		vector<bool> temp (width);
+		temp.assign(width, 0);
+		Board.at(i) = temp;
+	
 	}//populate the Board vector
 }//end constructor
 
@@ -97,7 +99,7 @@ vector<vector<int>> ModelGame::blackCells()
 	{
 		for(int c = 0; c < width; c++)
 		{
-			if(Board[r][c]) 
+			if((bool)Board.at(r).at(c)) 
 			{
 				index[0] = r;
 				index[1] = c;
@@ -108,6 +110,12 @@ vector<vector<int>> ModelGame::blackCells()
 	
 	//return vector
 	return black;
+}
+
+void ModelGame::setBlack(int row, int column)
+{
+	
+	if(row < height && column < width) Board[row][column] = true;
 }
 
 

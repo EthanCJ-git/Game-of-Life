@@ -11,8 +11,9 @@ class ModelGame
 		bool check(int x, int y);
 
 	public:
-		ModelGame(const int width = 400, const int height = 400);
+		ModelGame(const int w = 400, const int h = 400);
 		ModelGame();
 		void update();
 		vector<vector<int>> blackCells();
+		void setBlack(int row, int column);
 };
