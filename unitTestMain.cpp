@@ -36,6 +36,37 @@ TEST(TestAutomata, CheckCheck)
 	EXPECT_EQ(model.check(4, 5), false);
 }
 
+TEST(TestAutomata, CheckCheck2)
+{
+	ModelGame model = ModelGame(10, 10);
+	model.setBlack(5, 4);
+	model.setBlack(5, 5);
+	model.setBlack(5, 6);
+	EXPECT_EQ(model.blackCells().size(), 3);
+	EXPECT_EQ(model.check(5, 4), true);
+	EXPECT_EQ(model.check(5, 5), false);
+	EXPECT_EQ(model.check(5, 6), true);
+	EXPECT_EQ(model.check(0, 0), false);
+}
+
+TEST(TestAutomata, CheckUpdate)
+{
+	ModelGame model = ModelGame(10, 10);
+	model.setBlack(5, 4);
+	model.setBlack(5, 5);
+	model.setBlack(5, 6);
+	model.update();
+	auto black = model.blackCells();
+	EXPECT_EQ(black.size(), 3);
+	EXPECT_EQ(black.at(0).at(0), 4);
+	EXPECT_EQ(black.at(0).at(1), 5);
+	EXPECT_EQ(black.at(2).at(0), 6);
+	EXPECT_EQ(black.at(2).at(1), 5);
+	model.update();
+	black = model.blackCells();
+	EXPECT_EQ(black.size(), 3);
+}
+
 int main(int argc, char **argv)
 {
 	

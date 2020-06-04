@@ -4,6 +4,14 @@
 
 using std::vector;
 
+//I have to add this because c++'s mod operator doesn't handle negative numbers!
+//Isn't that wonderful?
+int ModelGame::modulus(int a, int b)
+{
+	while(a < 0) a += b;
+	return a%b;
+}
+
 //constructor with dimensions specified
 ModelGame::ModelGame(const int w, const int h):
 width(w),
@@ -20,7 +28,7 @@ Board(height)
 		Board.at(i) = temp;
 		
 	}//populate the Board vector
-	std::cout << Board.size();
+	
 }//end constructor
 
 //constructor with default dimensions
@@ -44,16 +52,17 @@ height(400)
 //x is row and y is column (matrix convention, not cartesian)
 bool ModelGame::check(int x, int y)
 {
+	
 	bool output = 0;
 	int sum = 0;
-	sum += Board[(x-1)%height][(y-1)%width];
-	sum += Board[(x-1)%height][(y)%width];
-	sum += Board[(x-1)%height][(y+1)%width];
-	sum += Board[(x)%height][(y-1)%width];
-	sum += Board[(x)%height][(y+1)%width];
-	sum += Board[(x+1)%height][(y-1)%width];
-	sum += Board[(x+1)%height][(y)%width];
-	sum += Board[(x+1)%height][(y+1)%width];
+	sum += (bool)Board.at(modulus((x-1),height)).at(modulus((y-1),width));
+	sum += (bool)Board.at(modulus((x-1),height)).at(modulus((y),width));
+	sum += (bool)Board.at(modulus((x-1),height)).at(modulus((y+1),width));
+	sum += (bool)Board.at(modulus((x),height)).at(modulus((y-1),width));
+	sum += (bool)Board.at(modulus((x),height)).at(modulus((y+1),width));
+	sum += (bool)Board.at(modulus((x+1),height)).at(modulus((y-1),width));
+	sum += (bool)Board.at(modulus((x+1),height)).at(modulus((y),width));
+	sum += (bool)Board.at(modulus((x+1),height)).at(modulus((y+1),width));
 
 	if(sum < 2) output = Board[x][y];
 	if(sum == 2) output = 0;
@@ -66,26 +75,26 @@ bool ModelGame::check(int x, int y)
 void ModelGame::update()
 {
 	//list of all cells that must be changed
-	vector<vector<int>> change;
-	vector<int> index (2);
-
+	vector<int> rowIndex;
+	vector<int> colIndex;
 	for(int r = 0; r < height; r++)
 	{
 		for(int c = 0; c < width; c++)
 		{
-			if(check(r, c))
+			if(ModelGame::check(r, c))
 			{	
-				index[0] = r;
-				index[1] = c;
-				change.push_back(index);
+				rowIndex.push_back(r);
+				colIndex.push_back(c);
 			}//end if(cell update needed) 
 		}//for c
 	}//for r
 
 	//iterate through vector and change listed cells
-	for(vector<vector<int>>::iterator it = change.begin(); it != change.end(); ++it)
+	//not using iterator bc I need to iterate through 2 vectors
+	for(int i = 0; i < colIndex.size(); i++)
 	{
-		Board[(*it).at(0)][(*it).at(1)].flip();
+		std::printf("%d\t%d\n", rowIndex[i], colIndex[i]);
+		Board.at(rowIndex[i]).at(colIndex[i]).flip();
 	}
 
 }//end update
