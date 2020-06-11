@@ -6,7 +6,7 @@ ControllerMain: ControllerMain.o Display.o
 	g++ -g -o ControllerMain ControllerMain.o Display.o $(GTKMMFLAGS)
 
 Display.o: Display.cpp Display.h
-	g++ -g -c Display.cpp $(GTKMMFLAGS)
+	g++ -g -c Display.cpp $(GTESTFLAGS)
 
 ControllerMain.o: ControllerMain.cpp
 	g++ -g -c ControllerMain.cpp $(GTKMMFLAGS)
