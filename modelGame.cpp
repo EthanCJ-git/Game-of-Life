@@ -67,6 +67,7 @@ bool ModelGame::check(int x, int y)
 	if(sum < 2) output = Board[x][y];
 	if(sum == 2) output = 0;
 	if(sum > 2) output = !Board[x][y];
+	if(sum > 3) output = Board[x][y];
 
 	return output;
 }//end check
@@ -93,7 +94,6 @@ void ModelGame::update()
 	//not using iterator bc I need to iterate through 2 vectors
 	for(int i = 0; i < colIndex.size(); i++)
 	{
-		std::printf("%d\t%d\n", rowIndex[i], colIndex[i]);
 		Board.at(rowIndex[i]).at(colIndex[i]).flip();
 	}
 
@@ -125,6 +125,17 @@ void ModelGame::setBlack(int row, int column)
 {
 	
 	if(row < height && column < width) Board[row][column] = true;
+}
+
+void ModelGame::setWhite(int row, int column)
+{
+	
+	if(row < height && column < width) Board[row][column] = false;
+}
+
+void ModelGame::setSwitch(int row, int column)
+{
+	if(row < height && column < width) Board[row][column] = !Board[row][column] != false;
 }
 
 

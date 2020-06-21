@@ -19,10 +19,11 @@ running(false)
 	BoardGrid.set_size_request(600, 600);
 
 	//add some black cells
-	GameBoard.setBlack(0, 0);
-	GameBoard.setBlack(4, 5);
+	GameBoard.setBlack(4, 6);
 	GameBoard.setBlack(5, 5);
 	GameBoard.setBlack(6, 5);
+	GameBoard.setBlack(6, 6);
+	GameBoard.setBlack(6, 7);
 	
 	//add to header bar
 	mHeader.pack_start(startButton);
@@ -39,6 +40,7 @@ running(false)
 	//add signal handlers
 	startButton.signal_clicked().connect(sigc::mem_fun(*this, &Display::onstart));
 	stopButton.signal_clicked().connect(sigc::mem_fun(*this, &Display::onstop));
+	BoardGrid.signal_button_press_event().connect(sigc::mem_fun(*this, &Display::onButtonPress));
 	
 }
 
@@ -63,7 +65,23 @@ bool Display::runGame()
 {
 	if(running)
 	{	
-		std::cout << std::endl;
+		GameBoard.update();
+		BoardGrid.queue_draw();
+	}
+	return true;
+}
+
+//mouse button clicked over draw area
+bool Display::onButtonPress(GdkEventButton* event)
+{
+	if(!running)
+	{
+		int width = BoardGrid.get_allocation().get_width();
+		int height = BoardGrid.get_allocation().get_height();
+		int row = event->y/(height/gridRows);
+		int column = event->x/(width/gridColumns);
+		GameBoard.setSwitch(row, column);
+		BoardGrid.queue_draw();
 	}
 	return true;
 }
@@ -74,7 +92,11 @@ MyGrid::MyGrid(const int rows, const int columns, ModelGame *data):
 gridRows(rows),
 gridColumns(columns),
 board(data)
-{}
+{
+	//make sure we see mouse clicks
+	add_events(Gdk::BUTTON_PRESS_MASK);
+	
+}
 
 MyGrid::~MyGrid(){}
 

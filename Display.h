@@ -48,6 +48,7 @@ private:
 	void onstart();
 	void onstop();
 	bool running;
+	bool onButtonPress(GdkEventButton* event);
 };
 
 

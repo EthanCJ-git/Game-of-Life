@@ -17,4 +17,6 @@ class ModelGame
 		void update();
 		vector<vector<int>> blackCells();
 		void setBlack(int row, int column);
+		void setWhite(int row, int column);
+		void setSwitch(int row, int column);
 };
