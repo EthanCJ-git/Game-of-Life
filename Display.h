@@ -5,16 +5,20 @@
 #include <gtkmm/box.h>
 #include <gtkmm/drawingarea.h>
 #include <vector>
+#include <iostream>
+#include <unistd.h>
+#include <glib.h>
+#include "modelGame.h"
 
 //class for game grid
 class MyGrid : public Gtk::DrawingArea
 {
 public:
-	MyGrid(const int rows, const int columns);
+	MyGrid(const int rows, const int columns, ModelGame *data);
 	virtual ~MyGrid();
 	const int gridRows;
 	const int gridColumns;
-	std::vector<std::vector<int>> cells;
+	ModelGame *board;
 protected:
 	//override signal handler
 	bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr) override;
@@ -27,10 +31,9 @@ public:
 	Display();
 	Display(int xSize, int ySize);
 	virtual ~Display();
-	void addCell(int row, int column);
-	void removeCell(int row, int column);
 	const int gridRows;
 	const int gridColumns;
+	bool runGame();
 
 private:
 	//child widgets
@@ -39,10 +42,12 @@ private:
 	Gtk::Button startButton;
 	Gtk::Button stopButton;
 	MyGrid BoardGrid;
+	ModelGame GameBoard;
 
-	//list of black cells
-	std::vector<std::vector<int>> cells;
-
+	//button handlers
+	void onstart();
+	void onstop();
+	bool running;
 };
 
 

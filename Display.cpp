@@ -5,10 +5,11 @@ mHeader(),
 startButton("start"),
 stopButton("stop"),
 mBox(Gtk::ORIENTATION_VERTICAL, 5),
-cells(),
 gridRows(30),
 gridColumns(30),
-BoardGrid(gridRows, gridColumns)
+GameBoard(gridRows, gridColumns),
+BoardGrid(gridRows, gridColumns, &GameBoard),
+running(false)
 {
 	//set window properties
 	set_title("Conway's Game of Life");
@@ -16,6 +17,12 @@ BoardGrid(gridRows, gridColumns)
 	set_border_width(5);
 	mHeader.set_size_request(-1, 20);
 	BoardGrid.set_size_request(600, 600);
+
+	//add some black cells
+	GameBoard.setBlack(0, 0);
+	GameBoard.setBlack(4, 5);
+	GameBoard.setBlack(5, 5);
+	GameBoard.setBlack(6, 5);
 	
 	//add to header bar
 	mHeader.pack_start(startButton);
@@ -29,7 +36,10 @@ BoardGrid(gridRows, gridColumns)
 	//make everything visible
 	show_all();
 
-
+	//add signal handlers
+	startButton.signal_clicked().connect(sigc::mem_fun(*this, &Display::onstart));
+	stopButton.signal_clicked().connect(sigc::mem_fun(*this, &Display::onstop));
+	
 }
 
 Display::Display():
@@ -38,30 +48,32 @@ Display(600, 600)
 
 Display::~Display() {}
 
-//add cell to list of black cells
-void Display::addCell(int row, int column)
+//start button handler
+void Display::onstart()
 {
-	std::vector<int> cell(2);
-	cell.push_back(row);
-	cell.push_back(column);
-	cells.push_back(cell);
-	BoardGrid.cells = cells;
+	running = true;
 }
 
-void Display::removeCell(int row, int column)
+void Display::onstop()
 {
-	for(auto it = cells.begin(); it != cells.end(); it++)
-	{
-		if(row == it->at(0) && column == it->at(1)) cells.erase(it--);
-	}
-	BoardGrid.cells = cells;
+	running = false;
 }
+
+bool Display::runGame()
+{
+	if(running)
+	{	
+		std::cout << std::endl;
+	}
+	return true;
+}
+
 
 //drawing area 
-MyGrid::MyGrid(const int rows, const int columns):
+MyGrid::MyGrid(const int rows, const int columns, ModelGame *data):
 gridRows(rows),
 gridColumns(columns),
-cells()
+board(data)
 {}
 
 MyGrid::~MyGrid(){}
@@ -98,12 +110,16 @@ bool MyGrid::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 		cr->move_to(n*width/gridColumns+lineSize/2.0, 0);
 		cr->line_to(n*width/gridColumns+lineSize/2.0, height);
 	}
+	
+	//draw
+	cr->stroke();
 
+	vector<vector<int>> cells = board->blackCells();
 	//draw black cells
 	for(auto it = cells.begin(); it != cells.end(); it++)
 	{
-		x = ((double)(it->at(1))-0.5)*(width/gridColumns);
-		y = ((double)(it->at(0))-0.5)*(height/gridRows);
+		x = ((double)(it->at(1)))*(width/gridColumns + lineSize*0.5);
+		y = ((double)(it->at(0)))*(height/gridRows + lineSize*0.5);
 		cr->rectangle(x, y, width/gridColumns, height/gridRows);
 		cr->fill();
 	}
@@ -111,6 +127,8 @@ bool MyGrid::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 	//draw
 	cr->stroke();
 }
+
+
 
 
 

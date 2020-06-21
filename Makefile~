@@ -2,11 +2,11 @@ GTESTFLAGS = /usr/lib/libgtest.a /usr/lib/libgtest_main.a -lpthread
 GTKMMFLAGS = `pkg-config --cflags --libs gtkmm-3.0`
 
 
-ControllerMain: ControllerMain.o Display.o
+ControllerMain: ControllerMain.o Display.o modelGame.o
 	g++ -g -o ControllerMain ControllerMain.o Display.o $(GTKMMFLAGS)
 
-Display.o: Display.cpp Display.h
-	g++ -g -c Display.cpp $(GTESTFLAGS)
+Display.o: Display.cpp Display.h 
+	g++ -g -c Display.cpp $(GTKMMFLAGS)
 
 ControllerMain.o: ControllerMain.cpp
 	g++ -g -c ControllerMain.cpp $(GTKMMFLAGS)
